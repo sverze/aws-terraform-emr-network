@@ -29,25 +29,6 @@ resource "aws_vpc" "vpc_2" {
   }
 }
 
-# Private VPC to launch our test instances into
-resource "aws_vpc_peering_connection" "pc_1" {
-  peer_vpc_id                  = "${aws_vpc.vpc_2.id}"
-  vpc_id                       = "${aws_vpc.vpc_1.id}"
-  auto_accept                  = true
-
-  accepter {
-    allow_remote_vpc_dns_resolution = true
-  }
-
-  requester {
-    allow_remote_vpc_dns_resolution = true
-  }
-
-  tags {
-    Name                       = "${var.environment_name}_pc_1"
-  }
-}
-
 
 ################ Internet Gateway  ################
 
@@ -75,24 +56,14 @@ resource "aws_route_table" "rt_1" {
     gateway_id                 = "${aws_internet_gateway.ig_1.id}"
   }
 
-  route {
-    cidr_block                 = "${var.aws_private_vpc_cidr}"
-    vpc_peering_connection_id  = "${aws_vpc_peering_connection.pc_1.id}"
-  }
-
   tags {
     Name                       = "${var.environment_name}_rt_1"
   }
 }
 
-# Route Table for Test Instance
+# Route Table for EMR Instance
 resource "aws_route_table" "rt_2" {
   vpc_id                       = "${aws_vpc.vpc_2.id}"
-
-  route {
-    cidr_block                 = "${var.aws_public_vpc_cidr}"
-    vpc_peering_connection_id  = "${aws_vpc_peering_connection.pc_1.id}"
-  }
 
   tags {
     Name                       = "${var.environment_name}_rt_2"
@@ -154,6 +125,14 @@ resource "aws_security_group" "sg_1" {
     cidr_blocks                = ["${var.bastion_network_cidr}"]
   }
 
+  ingress {
+    description                = "${var.environment_name}_sg_1 All within this SG"
+    from_port                  = 0
+    to_port                    = 0
+    protocol                   = "-1"
+    self                       = true
+  }
+
   egress {
     description                = "${var.environment_name}_sg_1 All to Anywhere"
     from_port                  = 0
@@ -172,13 +151,12 @@ resource "aws_security_group" "sg_2" {
   name                         = "${var.environment_name}_sg_2"
   vpc_id                       = "${aws_vpc.vpc_2.id}"
 
-  # SSH access from Bastion security group
   ingress {
-    description                = "${var.environment_name}_sg_2 SSH from Bastion VPC"
-    from_port                  = 22
-    to_port                    = 22
+    description                = "${var.environment_name}_sg_2 HTTP from Subnet"
+    from_port                  = 80
+    to_port                    = 80
     protocol                   = "tcp"
-    security_groups            = ["${aws_security_group.sg_1.id}"]
+    cidr_blocks                = ["${var.aws_sn_2_cidr}"]
   }
 
   ingress {

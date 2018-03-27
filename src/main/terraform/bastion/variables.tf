@@ -15,6 +15,10 @@ variable "aws_key_name" {
   description = "AWS key name to use, it must exist in the specified region"
 }
 
+variable "aws_vpc_id" {
+  description = "AWS VPC ID that the instances will be bound to"
+}
+
 variable "aws_security_group_id" {
   description = "AWS security group ID that the instances will be bound to"
 }
@@ -30,4 +34,8 @@ variable "aws_ami" {
 variable "aws_instance_type" {
   description = "The EC2 instance type"
   default     = "t2.micro"
+}
+
+variable "emr_service_name" {
+  description = "The VPC endpoint service name for the EMR cluster"
 }
