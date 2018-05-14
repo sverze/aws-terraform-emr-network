@@ -10,8 +10,7 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS profile to use other than the default"
-  default     = "default"
+  description = "AWS profile to use other during provisioning"
 }
 
 # NOTE: The key should be available via your SSH agent, use ssh-add to add this key

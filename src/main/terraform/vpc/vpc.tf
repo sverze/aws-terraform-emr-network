@@ -73,6 +73,7 @@ resource "aws_route_table" "rt_2" {
 
 ################      Subnets      ################
 
+
 # Subnet 1 in Availability Zone A for Bastion Host
 resource "aws_subnet" "sn_1" {
   vpc_id                       = "${aws_vpc.vpc_1.id}"

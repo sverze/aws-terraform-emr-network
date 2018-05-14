@@ -7,8 +7,7 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "AWS profile to use other than the default"
-  default     = "default"
+  description = "AWS profile to use other during provisioning"
 }
 
 variable "aws_key_name" {

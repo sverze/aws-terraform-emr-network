@@ -1,3 +1,8 @@
+provider "aws" {
+  region        = "${var.aws_region}"
+  profile       = "${var.aws_profile}"
+}
+
 # Sets up the entire network including gateways
 module "aws_vpc" {
   source                = "./vpc"
@@ -17,6 +22,7 @@ module "bastion_instance" {
   source                = "./bastion"
   environment_name      = "${var.environment_name}"
   aws_region            = "${var.aws_region}"
+  aws_profile           = "${var.aws_profile}"
   aws_key_name          = "${var.aws_key_name}"
   aws_vpc_id            = "${module.aws_vpc.vpc_1_id}"
   aws_security_group_id = "${module.aws_vpc.sg_1_id}"
