@@ -1,6 +1,7 @@
 # AWS / Terraform EMR Network with VPC Service Endpoint
 
-Work In Progress
+VPC 1 contains a bastion host that can be used for testing access to the associated VPC endpoint interface.
+This interface is connected to an ENI that in turn routes to the service endpoint in VPC 2
 
 ![Bastion VPC](aws-terraform-emr-network.png)
 
@@ -70,7 +71,7 @@ The best way to test the application is to SSH on to the test host and attempt a
 
 1. Copy your EC2 key to the bastion host - _scp -i <YOUR_KEY>.pem <YOUR_KEY>.pem ec2-user@<BASTION_HOST_IP>:.ssh/_
 2. SSH to the bastion host - _ssh ~/.ssh/<YOUR_KEY>.pem ec2-user@<BASTION_HOST_IP>_
-3. SSH to the application host - _ssh ~/.ssh/<YOUR_KEY>.pem ec2-user@<APPLICATION_HOST_IP>_
+3. Connect to the VPC endpoint interface. The DNS entry for the endpoint is an output value from the bastion module, otherwise you can locate the value by searching for the only interface endpoint associated with VPC 1, the following is an example - _curl http://vpce-02911c401b55c789b-abum0ynl.vpce-svc-0838beea528393c7f.ap-southeast-2.vpce.amazonaws.com_
 
 ### Destroy
 

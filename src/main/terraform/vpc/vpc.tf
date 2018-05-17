@@ -147,7 +147,7 @@ resource "aws_security_group" "sg_1" {
   }
 }
 
-# Security Group for Test Hosts
+# Security Group for Service Access
 resource "aws_security_group" "sg_2" {
   name                         = "${var.environment_name}_sg_2"
   vpc_id                       = "${aws_vpc.vpc_2.id}"
@@ -156,6 +156,14 @@ resource "aws_security_group" "sg_2" {
     description                = "${var.environment_name}_sg_2 HTTP from Subnet"
     from_port                  = 80
     to_port                    = 80
+    protocol                   = "tcp"
+    cidr_blocks                = ["${var.aws_sn_2_cidr}"]
+  }
+
+  ingress {
+    description                = "${var.environment_name}_sg_2 HDFS from Subnet"
+    from_port                  = 50070
+    to_port                    = 50070
     protocol                   = "tcp"
     cidr_blocks                = ["${var.aws_sn_2_cidr}"]
   }
@@ -180,6 +188,33 @@ resource "aws_security_group" "sg_2" {
     Name                       = "${var.environment_name}_sg_2"
   }
 }
+
+# Security Group for Private Access
+resource "aws_security_group" "sg_3" {
+  name                         = "${var.environment_name}_sg_3"
+  vpc_id                       = "${aws_vpc.vpc_2.id}"
+
+  ingress {
+    description                = "${var.environment_name}_sg_3 All within this SG"
+    from_port                  = 0
+    to_port                    = 0
+    protocol                   = "-1"
+    self                       = true
+  }
+
+  egress {
+    description                = "${var.environment_name}_sg_3 All to Anywhere"
+    from_port                  = 0
+    to_port                    = 0
+    protocol                   = "-1"
+    cidr_blocks                = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name                       = "${var.environment_name}_sg_3"
+  }
+}
+
 
 
 ################  VPC Endpoints  ################

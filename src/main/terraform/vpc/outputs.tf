@@ -21,3 +21,7 @@ output "sg_1_id" {
 output "sg_2_id" {
   value = "${aws_security_group.sg_2.id}"
 }
+
+output "sg_3_id" {
+  value = "${aws_security_group.sg_3.id}"
+}

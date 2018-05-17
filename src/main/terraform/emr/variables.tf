@@ -14,8 +14,12 @@ variable "aws_key_name" {
   description = "AWS key name to use, it must exist in the specified region"
 }
 
-variable "aws_security_group_id" {
-  description = "AWS security group ID that the instances will be bound to"
+variable "aws_service_security_group_id" {
+  description = "AWS security group ID for service access to EMR instances"
+}
+
+variable "aws_private_security_group_id" {
+  description = "AWS security group ID for private comms for EMR instances"
 }
 
 variable "aws_vpc_id" {
