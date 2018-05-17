@@ -184,8 +184,9 @@ resource "aws_security_group" "sg_2" {
 
 ################  VPC Endpoints  ################
 
-
 resource "aws_vpc_endpoint" "kinesis_streams" {
+  # Kinesis is not availablein certain regions
+  count                        = "${var.aws_region != "ap-southeast-2" ? 1 : 0}"
   vpc_id                       = "${aws_vpc.vpc_2.id}"
   service_name                 = "com.amazonaws.${var.aws_region}.kinesis-streams"
   vpc_endpoint_type            = "Interface"
