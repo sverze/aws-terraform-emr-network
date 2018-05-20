@@ -10,3 +10,11 @@ output "emr_test_instance" {
 output "service_name" {
   value = "${aws_vpc_endpoint_service.emr_vpc_endpoint_service.service_name}"
 }
+# 
+# output "emr_cluster_master_instance_type" {
+#   value = "${aws_emr_cluster.emr_cluster.instance_group.0.instance_role}"
+# }
+#
+# output "emr_cluster_master_instance_id" {
+#   value = "${aws_emr_cluster.emr_cluster.instance_group.*.instance_type}"
+# }

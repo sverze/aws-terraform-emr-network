@@ -85,9 +85,20 @@ resource "aws_emr_cluster" "emr_cluster" {
     instance_profile                  = "${aws_iam_instance_profile.emr_iam_instance_profile.arn}"
   }
 
-  master_instance_type                = "m3.xlarge"
-  core_instance_type                  = "m3.xlarge"
-  core_instance_count                 = 1
+  instance_group {
+    instance_count = 1
+    instance_role = "MASTER"
+    instance_type = "m3.xlarge"
+  }
+
+  instance_group {
+    instance_count = 2
+    instance_role = "CORE"
+    instance_type = "m3.xlarge"
+  }
+
+  # master_instance_type                = "m3.xlarge"
+  # instance_group                      = [${aws_emr_instance_group.emr_instance_group}]
 
   tags {
     role                              = "${aws_iam_role.emr_iam_role.name}"

@@ -202,6 +202,14 @@ resource "aws_security_group" "sg_3" {
     self                       = true
   }
 
+  ingress {
+    description                = "${var.environment_name}_sg_3 HTTPS from sg_2"
+    from_port                  = 8443
+    to_port                    = 8443
+    protocol                   = "tcp"
+    security_groups            = ["${aws_security_group.sg_2.id}"]
+  }
+
   egress {
     description                = "${var.environment_name}_sg_3 All to Anywhere"
     from_port                  = 0
