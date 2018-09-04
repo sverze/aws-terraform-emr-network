@@ -6,12 +6,20 @@ output "vpc_2_id" {
   value = "${aws_vpc.vpc_2.id}"
 }
 
-output "sn_1_id" {
-  value = "${aws_subnet.sn_1.id}"
+output "sn_1a_id" {
+  value = "${aws_subnet.sn_1a.id}"
 }
 
-output "sn_2_id" {
-  value = "${aws_subnet.sn_2.id}"
+output "sn_1b_id" {
+  value = "${aws_subnet.sn_1b.id}"
+}
+
+output "sn_2a_id" {
+  value = "${aws_subnet.sn_2a.id}"
+}
+
+output "sn_2b_id" {
+  value = "${aws_subnet.sn_2b.id}"
 }
 
 output "sg_1_id" {

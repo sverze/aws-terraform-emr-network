@@ -28,14 +28,24 @@ variable "aws_private_vpc_cidr" {
   default          = "10.2.0.0/16"
 }
 
-variable "aws_sn_1_cidr" {
+variable "aws_sn_1a_cidr" {
   description      = "Subnet availability zone A CIDR block range for bastion instance"
   default          = "10.1.1.0/24"
 }
 
-variable "aws_sn_2_cidr" {
+variable "aws_sn_1b_cidr" {
+  description      = "Subnet availability zone B CIDR block range for bastion instance"
+  default          = "10.1.2.0/24"
+}
+
+variable "aws_sn_2a_cidr" {
   description      = "Subnet availability zone A CIDR block range for test instance"
   default          = "10.2.1.0/24"
+}
+
+variable "aws_sn_2b_cidr" {
+  description      = "Subnet availability zone B CIDR block range for test instance"
+  default          = "10.2.2.0/24"
 }
 
 variable "bastion_network_cidr" {

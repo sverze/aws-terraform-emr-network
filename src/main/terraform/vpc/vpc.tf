@@ -1,8 +1,8 @@
 # Specify the provider and access details
-provider "aws" {
-  region                       = "${var.aws_region}"
-  profile                      = "${var.aws_profile}"
-}
+# provider "aws" {
+#   region                       = "${var.aws_region}"
+#   profile                      = "${var.aws_profile}"
+# }
 
 ################        VPC        ################
 
@@ -74,40 +74,73 @@ resource "aws_route_table" "rt_2" {
 ################      Subnets      ################
 
 
-# Subnet 1 in Availability Zone A for Bastion Host
-resource "aws_subnet" "sn_1" {
+# Subnet 1a in Availability Zone A for Bastion Host
+resource "aws_subnet" "sn_1a" {
   vpc_id                       = "${aws_vpc.vpc_1.id}"
-  cidr_block                   = "${var.aws_sn_1_cidr}"
+  cidr_block                   = "${var.aws_sn_1a_cidr}"
   availability_zone            = "${var.aws_region}a"
   map_public_ip_on_launch      = true
 
   tags {
-    Name                       = "${var.environment_name}_sn_1"
+    Name                       = "${var.environment_name}_sn_1a"
   }
 }
 
-resource "aws_route_table_association" "rta_1" {
-  subnet_id                    = "${aws_subnet.sn_1.id}"
+resource "aws_route_table_association" "rta_1a" {
+  subnet_id                    = "${aws_subnet.sn_1a.id}"
   route_table_id               = "${aws_route_table.rt_1.id}"
 }
 
-# Subnet 2 in Availability Zone A for Application Test Hosts
-resource "aws_subnet" "sn_2" {
+# Subnet 1b in Availability Zone B for Bastion Host
+resource "aws_subnet" "sn_1b" {
+  vpc_id                       = "${aws_vpc.vpc_1.id}"
+  cidr_block                   = "${var.aws_sn_1b_cidr}"
+  availability_zone            = "${var.aws_region}b"
+  map_public_ip_on_launch      = true
+
+  tags {
+    Name                       = "${var.environment_name}_sn_1b"
+  }
+}
+
+resource "aws_route_table_association" "rta_1b" {
+  subnet_id                    = "${aws_subnet.sn_1b.id}"
+  route_table_id               = "${aws_route_table.rt_1.id}"
+}
+
+# Subnet 2a in Availability Zone A for Application Test Hosts
+resource "aws_subnet" "sn_2a" {
   vpc_id                       = "${aws_vpc.vpc_2.id}"
-  cidr_block                   = "${var.aws_sn_2_cidr}"
+  cidr_block                   = "${var.aws_sn_2a_cidr}"
   availability_zone            = "${var.aws_region}a"
   map_public_ip_on_launch      = false
 
   tags {
-    Name                       = "${var.environment_name}_sn_2"
+    Name                       = "${var.environment_name}_sn_2a"
   }
 }
 
-resource "aws_route_table_association" "rta_2" {
-  subnet_id                    = "${aws_subnet.sn_2.id}"
+resource "aws_route_table_association" "rta_2a" {
+  subnet_id                    = "${aws_subnet.sn_2a.id}"
   route_table_id               = "${aws_route_table.rt_2.id}"
 }
 
+# Subnet 2b in Availability Zone A for Application Test Hosts
+resource "aws_subnet" "sn_2b" {
+  vpc_id                       = "${aws_vpc.vpc_2.id}"
+  cidr_block                   = "${var.aws_sn_2b_cidr}"
+  availability_zone            = "${var.aws_region}b"
+  map_public_ip_on_launch      = false
+
+  tags {
+    Name                       = "${var.environment_name}_sn_2b"
+  }
+}
+
+resource "aws_route_table_association" "rta_2b" {
+  subnet_id                    = "${aws_subnet.sn_2b.id}"
+  route_table_id               = "${aws_route_table.rt_2.id}"
+}
 
 ################  Security Groups  ################
 
@@ -157,7 +190,7 @@ resource "aws_security_group" "sg_2" {
     from_port                  = 80
     to_port                    = 80
     protocol                   = "tcp"
-    cidr_blocks                = ["${var.aws_sn_2_cidr}"]
+    cidr_blocks                = ["${var.aws_sn_2a_cidr}", "${var.aws_sn_2b_cidr}"]
   }
 
   ingress {
@@ -165,7 +198,7 @@ resource "aws_security_group" "sg_2" {
     from_port                  = 50070
     to_port                    = 50070
     protocol                   = "tcp"
-    cidr_blocks                = ["${var.aws_sn_2_cidr}"]
+    cidr_blocks                = ["${var.aws_sn_2a_cidr}", "${var.aws_sn_2b_cidr}"]
   }
 
   ingress {
@@ -224,8 +257,8 @@ resource "aws_security_group" "sg_3" {
 }
 
 
-
 ################  VPC Endpoints  ################
+
 
 resource "aws_vpc_endpoint" "kinesis_streams" {
   # Kinesis is not availablein certain regions
@@ -233,7 +266,7 @@ resource "aws_vpc_endpoint" "kinesis_streams" {
   vpc_id                       = "${aws_vpc.vpc_2.id}"
   service_name                 = "com.amazonaws.${var.aws_region}.kinesis-streams"
   vpc_endpoint_type            = "Interface"
-  subnet_ids                   = ["${aws_subnet.sn_2.id}"]
+  subnet_ids                   = ["${aws_subnet.sn_2a.id}", "${aws_subnet.sn_2b.id}"]
   security_group_ids           = ["${aws_security_group.sg_2.id}"]
   private_dns_enabled          = true
 }

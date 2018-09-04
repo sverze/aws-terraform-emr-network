@@ -23,11 +23,19 @@ variable "aws_private_vpc_cidr" {
   description = "VPC CIDR block range for the private VPC"
 }
 
-variable "aws_sn_1_cidr" {
+variable "aws_sn_1a_cidr" {
   description = "Subnet availability zone A CIDR block range for NAT gateways"
 }
 
-variable "aws_sn_2_cidr" {
+variable "aws_sn_1b_cidr" {
+  description = "Subnet availability zone B CIDR block range for NAT gateways"
+}
+
+variable "aws_sn_2a_cidr" {
+  description = "Subnet availability zone A CIDR block range for NAT gateways"
+}
+
+variable "aws_sn_2b_cidr" {
   description = "Subnet availability zone B CIDR block range for NAT gateways"
 }
 

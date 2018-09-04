@@ -1,8 +1,8 @@
 # Specify the provider and access details
-provider "aws" {
-  region                       = "${var.aws_region}"
-  profile                      = "${var.aws_profile}"
-}
+# provider "aws" {
+#   region                       = "${var.aws_region}"
+#   profile                      = "${var.aws_profile}"
+# }
 
 data "aws_iam_policy_document" "bastion_iam_policy_document" {
   statement {
@@ -16,13 +16,13 @@ data "aws_iam_policy_document" "bastion_iam_policy_document" {
 }
 
 resource "aws_iam_role" "bastion_iam_role" {
-  name                         = "bastion_instance_role"
+  name                         = "${var.environment_name}_bastion_instance_role"
   path                         = "/system/"
   assume_role_policy           = "${data.aws_iam_policy_document.bastion_iam_policy_document.json}"
 }
 
 resource "aws_iam_instance_profile" "bastion_iam_instance_profile" {
-  name                         = "bastion_iam_instance_profile"
+  name                         = "${var.environment_name}_bastion_iam_instance_profile"
   role                         = "${aws_iam_role.bastion_iam_role.name}"
 }
 
